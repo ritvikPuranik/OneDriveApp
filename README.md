@@ -19,7 +19,7 @@ A simple interface to connect with OneDrive and present the files and folders th
 ## Prerequisites
 
  **An Azure Application**
-  - Set `Supported Account Types` as `Accounts in any organizational directory`
+  - Set `Supported Account Types` as **Accounts in any organizational directory**
   - Save the `client_id` and `client_secret`.
 
  **App Permissions**:
@@ -39,7 +39,7 @@ Clone the project, and navigate to directory
 
 ```bash
   git clone https://github.com/ritvikPuranik/OneDriveApp.git
-  cd OneDrive
+  cd OneDriveApp
 ```
 
 Install dependencies
