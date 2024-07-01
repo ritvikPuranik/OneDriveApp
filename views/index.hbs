@@ -1,0 +1,28 @@
+<!-- Copyright (c) Microsoft Corporation.
+     Licensed under the MIT License. -->
+
+<!-- <IndexSnippet> -->
+<div class="p-5 mb-4 bg-light rounded-3">
+  <div class="container-fluid py-5">
+    {{!-- <p class="lead">Developed for Strac, as part of the assignment</p> --}}
+    {{#if user}}
+        <h1 class="display-5 fw-bold">Welcome {{ user.displayName }}!</h1>
+      <p class="col-md-8 fs-6">Use the navigation bar at the top of the page to get started.</p>
+    {{else}}
+      {{!-- <a href="/auth/signin" class="btn btn-primary btn-large">Click here to sign in</a> --}}
+        <h1 class="display-5 fw-bold">OneDrive Explorer</h1>
+        <form action="/signin" method="POST">
+            <div class="form-group">
+                <label for="client_id">Client ID</label>
+                <input type="text" class="form-control" id="client_id" name="client_id" required>
+            </div>
+            <div class="form-group mt-2">
+                <label for="client_secret">Client Secret</label>
+                <input type="text" class="form-control" id="client_secret" name="client_secret" required>
+            </div>
+            <button type="submit" class="btn btn-primary mt-5">Submit</button>
+        </form>
+    {{/if}}
+  </div>
+</div>
+<!-- </IndexSnippet> -->

@@ -1,0 +1,172 @@
+<div class="p-5 mb-4 bg-light rounded-3">
+<div id="breadcrumb-folder" class="container"></div>
+  <div class="container-fluid py-3">
+    <h3>My Files</h3>
+    
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Created By</th>
+            <th>Size</th>
+            <th>Last Modified</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each directory}}
+            <tr>
+                {{#if this.downloadUrl}}
+                    <td>
+                        <a href="{{ this.downloadUrl }}" style="margin-left: 10px;" target="_blank">{{truncate this.name 45}}</a>
+                        <button id='permissions-{{ this.id }}' class="btn btn-link" onclick='showPermissions("{{this.id}}", "{{this.name}}")' data-toggle="tooltip" data-placement="top" title="View permissions">
+                            <i class="fa-regular fa-user"></i>
+                        </button>
+                    </td>
+                {{else}}
+                    <td><button id={{ this.id }} class="btn btn-link" onclick='showFiles("{{this.id}}", "{{this.name}}")'>{{ this.name }}</button></td>
+                {{/if}}
+              <td>{{ this.createdBy }}</td>
+              <td>{{ this.size }}</td>
+              <td>{{ this.lastModifiedDateTime }}</td>
+              <td><a href="{{ this.webUrl }}" target="_blank">OneDrive</a></td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="permissionsModal" tabindex="-1" role="dialog" aria-labelledby="permissionsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="permissionsModalLabel"></h5>
+                <button type="button" class="close btn btn-danger m-3" id="modal-close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {{!-- <ul id="permissions-list" class="list-group m-3">
+                    <!-- Permissions will be appended here -->
+                </ul> --}}
+                <table class="table table-striped" >
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Role</th>
+                        </tr>
+                    </thead>
+                    <tbody id="permissions-list">
+                        <!-- Rows will be appended here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const breadcrumb = () =>{
+        // Create the nav element
+        const nav = document.createElement('nav');
+        nav.setAttribute('aria-label', 'breadcrumb');
+
+        // Create the ordered list (ol) element
+        const ol = document.createElement('ol');
+        ol.className = 'breadcrumb';
+        ol.id = 'folder-structure';
+
+        // Create the first list item (li) element
+        const li1 = document.createElement('li');
+        li1.className = 'breadcrumb-item';
+
+        // Create the anchor (a) element for the first list item
+        const a1 = document.createElement('a');
+        a1.href = '/folder';
+        a1.textContent = 'Home';
+
+        // Append the anchor to the first list item
+        li1.appendChild(a1);
+        ol.appendChild(li1);
+
+        const REGEX_FOLDER_PATH = /\/folder\/[^/]+/;
+        if(REGEX_FOLDER_PATH.test(window.location.href)){
+            // Create the second list item (li) element
+            const li2 = document.createElement('li');
+            li2.className = 'breadcrumb-item active';
+            li2.setAttribute('aria-current', 'page');
+            li2.textContent = localStorage.getItem('curFolderName');
+            ol.appendChild(li2);
+
+        }
+
+        // Append the ordered list to the nav element
+        nav.appendChild(ol);
+        document.getElementById('breadcrumb-folder').appendChild(nav);
+    }
+    
+
+    const showFiles = async(id, name) => {
+        console.log("id clicked>", id);
+        window.location.href = `/folder/${id}`;
+        localStorage.setItem('curFolderName', name);
+    }
+
+    const showPermissions = async(id, name) =>{
+        console.log("showPermissions called>", id);
+        let permissions = [];
+
+        //make api response to get permissions here
+        let response = await fetch(`/folder/getPermissions?id=${id}`);
+        if(response.ok){
+            response = await response.json();
+            permissions = response.permissions;
+            
+        }else{
+            console.log("error while getting permissions>");
+            return;
+        }
+        console.log("permissions after api>", permissions);
+
+        document.getElementById('permissionsModalLabel').innerText = `Permissions for ${name}`;
+
+        // Get the permissions list element
+        const tableBody = document.getElementById('permissions-list');
+        tableBody.innerHTML = ''
+
+        permissions.forEach(user => {
+            const row = document.createElement('tr');
+            const roleCell = document.createElement('td');
+            const nameCell = document.createElement('td');
+
+            roleCell.textContent = user.role;
+            nameCell.textContent = user.name;
+
+            row.appendChild(nameCell);
+            row.appendChild(roleCell);
+
+            tableBody.appendChild(row);
+        });
+
+        // Show the modal
+        const modal = document.getElementById('permissionsModal');
+        modal.style.display = 'block';
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Close modal when clicking the close button
+        document.querySelector('#modal-close').onclick = function() {
+            modal.style.display = 'none';
+        }
+    }
+
+    breadcrumb();
+</script>
