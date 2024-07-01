@@ -37,8 +37,8 @@ A simple interface to connect with OneDrive and present the files and folders th
 Clone the project, and navigate to directory
 
 ```bash
-  git clone https://link-to-project
-  cd my-project
+  git clone https://github.com/ritvikPuranik/OneDriveApp.git
+  cd OneDrive
 ```
 
 Install dependencies
