@@ -19,7 +19,8 @@ A simple interface to connect with OneDrive and present the files and folders th
 ## Prerequisites
 
  **An Azure Application**
-   - Save the `client_id` and `client_secret`.
+  - Set `Supported Account Types` as `Accounts in any organizational directory`
+  - Save the `client_id` and `client_secret`.
 
  **App Permissions**:
    - `Files.Read.All` - Delegated
