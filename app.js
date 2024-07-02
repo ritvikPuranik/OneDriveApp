@@ -38,8 +38,6 @@ app.use(function(req, res, next) {
   // in the response locals
   res.locals.error = req.flash('error_msg');
 
-  // Check for simple error string and
-  // convert to layout's expected format
   var errs = req.flash('error');
   for (var i in errs){
     res.locals.error.push({message: 'An error occurred', debug: errs[i]});
@@ -53,7 +51,6 @@ app.use(function(req, res, next) {
 
   next();
 });
-// </SessionSnippet>
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -91,6 +88,15 @@ app.get('/', function(req, res) {
   res.render('index', params);
 });
 
+// // Function to clear the token cache
+// async function clearTokenCache() {
+//   const accounts = await app.locals.msalClient.getTokenCache().getAllAccounts();
+//   console.log('accounts found>', accounts);
+//   for (const account of accounts) {
+//       await app.locals.msalClient.getTokenCache().removeAccount(account);
+//   }
+// }
+
 app.post('/signin', async(req, res) =>{
   console.log('entered signin>', req.body);
   const {client_id, client_secret} = req.body;
@@ -120,6 +126,7 @@ app.post('/signin', async(req, res) =>{
   };
 
   try {
+    // await clearTokenCache();
     const authUrl = await req.app.locals.msalClient.getAuthCodeUrl(urlParameters);
     console.log('auth url received>>', authUrl);
     res.redirect(authUrl);
@@ -165,37 +172,6 @@ app.get('/notificationClient', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
-
-// app.get('/lifecycleNotifications', async (req, res) => {
-//   try {
-//     // Extract the validation token from query parameters
-//     const validationToken = req.query.validationToken;
-
-//     console.log('Received validationToken /lifecycleNotifications GET:', validationToken);
-
-//     // Respond with the validation token
-//     res.status(200).send(decodeURIComponent(validationToken));
-//   } catch (error) {
-//     console.error('Error handling notificationClient request:', error);
-//     res.status(500).send('Internal Server Error');
-//   }
-// });
-
-// app.post('/lifecycleNotifications', async (req, res) => {
-//   try {
-//     // Extract the validation token from query parameters
-//     const validationToken = req.query.validationToken;
-
-//     console.log('Received validationToken /lifecycleNotifications POST:', validationToken);
-
-//     // Respond with the validation token
-//     res.status(200).send(decodeURIComponent(validationToken));
-//   } catch (error) {
-//     console.error('Error handling notificationClient request:', error);
-//     res.status(500).send('Internal Server Error');
-//   }
-// });
-
 
 
 // catch 404 and forward to error handler

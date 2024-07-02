@@ -38,9 +38,11 @@ router.get('/callback',
     };
 
     try {
+      console.log('token request>', tokenRequest);
       const response = await req.app.locals
         .msalClient.acquireTokenByCode(tokenRequest);
 
+      console.log('response from getTokenFromcode>', response);
       // Save the user's homeAccountId in their session
       req.session.userId = response.account.homeAccountId;
 
@@ -48,6 +50,7 @@ router.get('/callback',
         req.app.locals.msalClient,
         req.session.userId
       );
+      console.log('found user details>', user);
 
       // console.log('setting up subscription>>');
       // await graph.setupSubscription(req.app.locals.msalClient, req.session.userId);

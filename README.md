@@ -20,7 +20,7 @@ A simple interface to connect with OneDrive and present the files and folders th
 
  **An Azure Application**
   - Set `Supported Account Types` as **Accounts in any organizational directory**
-  - Save the `client_id` and `client_secret`.
+  - Save the `client_id` and `client_secret`(create a new client_secret if not saved).
 
  **App Permissions**:
    - `Files.Read.All` - Delegated
@@ -57,7 +57,7 @@ On a browser window, launch http://localhost:3000 and watch the magic!
 
 ## Demo
 
-Insert gif or link to demo
+https://www.loom.com/share/c037141c4b0a46e2a17f6e696f46e869
 
 
 ## Authors
